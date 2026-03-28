@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: tinyfish-signaldeck
+    runtime: docker
+    plan: free
+    autoDeploy: true
+    healthCheckPath: /api/health
+    envVars:
+      - key: PORT
+        value: "8787"
+      - key: TINYFISH_API_KEY
+        sync: false

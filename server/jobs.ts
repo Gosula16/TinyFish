@@ -1,7 +1,7 @@
 import crypto from "node:crypto";
 import { buildDemoReport } from "./demo-data.js";
 import { buildSummary } from "./summary.js";
-import { TinyFishClient } from "./tinyfish.js";
+import { RetryableTinyFishError, TinyFishClient } from "./tinyfish.js";
 import type { AnalysisJob, AnalyzeRequest, CompetitorRun } from "./types.js";
 
 const jobs = new Map<string, AnalysisJob>();
@@ -96,8 +96,13 @@ export async function syncJob(job: AnalysisJob, apiKey?: string): Promise<Analys
           run.status = "running";
         }
       } catch (error) {
-        run.status = "failed";
-        run.error = error instanceof Error ? error.message : "Failed to read TinyFish run.";
+        if (error instanceof RetryableTinyFishError) {
+          run.status = "running";
+          run.error = "TinyFish polling hit a temporary upstream error. Retrying automatically.";
+        } else {
+          run.status = "failed";
+          run.error = error instanceof Error ? error.message : "Failed to read TinyFish run.";
+        }
       }
     })
   );

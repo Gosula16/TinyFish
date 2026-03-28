@@ -84,6 +84,9 @@ export class TinyFishClient {
 
     if (!response.ok) {
       const text = await response.text();
+      if (response.status >= 500) {
+        throw new RetryableTinyFishError(`TinyFish run fetch failed (${response.status}): ${text}`);
+      }
       throw new Error(`TinyFish run fetch failed (${response.status}): ${text}`);
     }
 
@@ -102,6 +105,13 @@ export class TinyFishClient {
         screenshot: step.screenshot ?? null
       }))
     };
+  }
+}
+
+export class RetryableTinyFishError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "RetryableTinyFishError";
   }
 }
 

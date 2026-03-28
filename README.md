@@ -43,6 +43,16 @@ npm run dev
 
 If `TINYFISH_API_KEY` is missing, the app runs in demo mode with seeded sample outputs so you can still review the UX and prepare your demo flow.
 
+## Deploy
+
+This repo includes a `Dockerfile` and `render.yaml` for easy deployment on Render.
+
+1. Create a new Render Blueprint or Web Service from the GitHub repo.
+2. Set `TINYFISH_API_KEY` in the service environment.
+3. Deploy and use `/api/health` as the health check.
+
+The app serves both the API and the built frontend from the same Node process.
+
 ## Suggested demo script
 
 1. Explain that SignalDeck helps revenue teams keep up with competitor moves without manually checking sites.
