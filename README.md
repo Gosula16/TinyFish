@@ -2,6 +2,8 @@
 
 SignalDeck is a TinyFish-powered competitive intelligence app built for the TinyFish pre-accelerator hackathon. It launches concurrent web agents against real competitor websites, lets them navigate pricing, product, careers, and news pages, and turns the result into sales-ready battlecards.
 
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/Gosula16/TinyFish)
+
 ## Why this fits the hackathon
 
 - Uses TinyFish as core browser infrastructure, not as a side feature
