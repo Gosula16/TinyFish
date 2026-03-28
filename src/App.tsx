@@ -147,7 +147,7 @@ export default function App() {
       setJob(nextJob);
       pushAssistantMessage(
         "assistant",
-        `Launched ${nextJob.runs.length} agent run${nextJob.runs.length > 1 ? "s" : ""}. I’ll keep refreshing the dashboard while TinyFish works.`
+        `Launched ${nextJob.runs.length} agent run${nextJob.runs.length > 1 ? "s" : ""}. I'll keep refreshing the dashboard while TinyFish works.`
       );
     } catch (submitError) {
       setError(submitError instanceof Error ? submitError.message : "Failed to start analysis.");
@@ -175,7 +175,8 @@ export default function App() {
   function removeCompetitor(index: number) {
     setPayload((current) => ({
       ...current,
-      competitors: current.competitors.length > 1 ? current.competitors.filter((_, currentIndex) => currentIndex !== index) : current.competitors
+      competitors:
+        current.competitors.length > 1 ? current.competitors.filter((_, currentIndex) => currentIndex !== index) : current.competitors
     }));
   }
 
@@ -251,6 +252,23 @@ export default function App() {
     <div className="shell">
       <div className="ambient ambient-a" />
       <div className="ambient ambient-b" />
+      <div className="ambient ambient-c" />
+
+      <nav className="topbar">
+        <div className="brand-lockup">
+          <div className="brand-mark">S</div>
+          <div>
+            <strong>SignalDeck</strong>
+            <span>Competitive intelligence on the live web</span>
+          </div>
+        </div>
+        <div className="topbar-status">
+          <Badge label={mode === "live" ? "Live TinyFish" : "Demo Mode"} />
+          <a href="https://tinyfish-signaldeck.onrender.com/" target="_blank" rel="noreferrer" className="topbar-link">
+            Open live app
+          </a>
+        </div>
+      </nav>
 
       <header className="hero hero-wide">
         <div className="hero-copy">
@@ -264,6 +282,18 @@ export default function App() {
             <Badge label={mode === "live" ? "Live TinyFish Connected" : "Demo Mode Ready"} />
             <Badge label={`${readiness.filledCompetitors} competitors configured`} />
             <Badge label={`${readiness.score}/5 setup signals ready`} />
+          </div>
+          <div className="hero-proof">
+            <div className="proof-card">
+              <span className="metric-label">Outcome</span>
+              <strong>Battlecards in minutes</strong>
+              <p>Pricing, launches, proof points, hiring signals, and positioning in one pass.</p>
+            </div>
+            <div className="proof-card">
+              <span className="metric-label">Best For</span>
+              <strong>Sales and PMM teams</strong>
+              <p>Replace manual tab-hopping with one guided workspace and live web agent runs.</p>
+            </div>
           </div>
         </div>
 
@@ -497,13 +527,27 @@ export default function App() {
             </div>
 
             <div className="quick-prompts">
-              <button type="button" className="ghost" onClick={() => pushAssistantMessage("assistant", buildAssistantReply("How do I get a better demo?", payload, mode))}>
+              <button
+                type="button"
+                className="ghost"
+                onClick={() => pushAssistantMessage("assistant", buildAssistantReply("How do I get a better demo?", payload, mode))}
+              >
                 Better demo
               </button>
-              <button type="button" className="ghost" onClick={() => pushAssistantMessage("assistant", buildAssistantReply("What should I ask the agent to look for?", payload, mode))}>
+              <button
+                type="button"
+                className="ghost"
+                onClick={() =>
+                  pushAssistantMessage("assistant", buildAssistantReply("What should I ask the agent to look for?", payload, mode))
+                }
+              >
                 Prompt help
               </button>
-              <button type="button" className="ghost" onClick={() => pushAssistantMessage("assistant", buildAssistantReply("Is stealth necessary?", payload, mode))}>
+              <button
+                type="button"
+                className="ghost"
+                onClick={() => pushAssistantMessage("assistant", buildAssistantReply("Is stealth necessary?", payload, mode))}
+              >
                 Browser help
               </button>
             </div>
@@ -561,6 +605,10 @@ function RunCard({ run }: { run: CompetitorRun }) {
       {run.report ? (
         <div className="run-card-body">
           <p className="one-liner">{run.report.one_liner}</p>
+          <div className="signal-pills">
+            <span className="signal-pill">{run.report.pricing.has_public_pricing ? "Public pricing" : "Pricing unclear"}</span>
+            {run.report.target_customer ? <span className="signal-pill">{run.report.target_customer}</span> : null}
+          </div>
           <div className="run-highlight">
             <strong>Recommended Positioning</strong>
             <p>{run.report.recommended_sales_angle ?? "No positioning suggestion returned yet."}</p>
@@ -649,7 +697,7 @@ function buildAssistantReply(input: string, payload: AnalyzePayload, mode: "live
   if (text.includes("live") || text.includes("api")) {
     return mode === "live"
       ? "Live mode is connected. When you launch, SignalDeck creates real TinyFish automations and refreshes the dashboard as runs complete."
-      : "You’re in demo mode right now. Add a TinyFish API key to the backend environment to switch the app into live web automation mode.";
+      : "You're in demo mode right now. Add a TinyFish API key to the backend environment to switch the app into live web automation mode.";
   }
 
   return `Right now your setup is aimed at ${payload.marketName.toLowerCase()}. If you want cleaner outputs, tighten the analysis angle so the agent returns only the business signals you truly need.`;
